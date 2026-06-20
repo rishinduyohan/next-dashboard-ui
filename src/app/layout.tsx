@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+// Suppress TS error for side-effect CSS import when no global d.ts is present
+// @ts-ignore
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
