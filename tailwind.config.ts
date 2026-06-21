@@ -13,6 +13,19 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        Rishsky: "#C3EBFA",
+        RishlightSky: "#EDF9FD",
+        Rishpurple: "#CFCEFF",
+        RishpurpleLight: "#F1F0FF",
+        Rishyellow: "#FAE27C",
+        RishyellowLight: "#FEFCE8",
+      },
+      fontWeight: {
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+      },
     },
   },
   plugins: [],
