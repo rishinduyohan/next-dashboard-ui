@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm } from "react-hook-form";
 
 const AnnouncementForm = ({ type, data }: { type: "create" | "update"; data?: any }) => {
