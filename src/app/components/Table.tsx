@@ -12,18 +12,20 @@ type TableProps = {
 
 const Table = ({ columns, renderRow, data }: TableProps) => {
   return (
-    <table className="w-full mt-4">
-      <thead>
-        <tr className="text-left text-gray-500 text-sm">
-          {columns.map((col) => (
-            <th key={col.accessor} className={col.className}>
-              {col.header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>{data.map((item) => renderRow(item))}</tbody>
-    </table>
+    <div className="w-full overflow-x-auto">
+      <table className="w-full mt-4 min-w-[640px]">
+        <thead>
+          <tr className="text-left text-gray-400 text-xs font-semibold border-b border-gray-100">
+            {columns.map((col) => (
+              <th key={col.accessor} className={`pb-3 ${col.className ?? ""}`}>
+                {col.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>{data.map((item) => renderRow(item))}</tbody>
+      </table>
+    </div>
   );
 };
 
