@@ -79,7 +79,8 @@ const Navbar = ({ user, onMenuToggle }: NavbarProps) => {
               alt="avatar"
               width={36}
               height={36}
-              className="rounded-full ring-2 ring-gray-200 hover:ring-[#C3EBFA] transition-all cursor-pointer object-cover"
+              unoptimized={user.avatar?.startsWith("data:")}
+              className="rounded-full ring-2 ring-gray-200 hover:ring-[#C3EBFA] transition-all cursor-pointer object-cover w-9 h-9"
             />
           </Link>
         </div>
