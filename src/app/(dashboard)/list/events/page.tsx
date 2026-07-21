@@ -5,7 +5,7 @@ import FormModal from "@/app/components/FormModal";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
 import TableSearch from "@/app/components/TableSearch";
-import { role } from "@/lib/data";
+import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import Image from "next/image";
 
@@ -18,38 +18,40 @@ type Event = {
   endTime: string;
 };
 
-const columns = [
-  { header: "Title", accessor: "title" },
-  { header: "Class", accessor: "class" },
-  { header: "Date", accessor: "date", className: "hidden md:table-cell" },
-  { header: "Start Time", accessor: "startTime", className: "hidden md:table-cell" },
-  { header: "End Time", accessor: "endTime", className: "hidden md:table-cell" },
-  { header: "Actions", accessor: "action" },
-];
-
-const renderRow = (item: Event) => (
-  <tr key={item.id} className="border-b border-gray-200 dark:border-slate-800 even:bg-slate-50 dark:even:bg-slate-800/40 text-sm hover:bg-RishlightSky dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-slate-200">
-    <td className="flex items-center gap-4 p-4 font-semibold text-gray-800 dark:text-slate-100">{item.title}</td>
-    <td>{item.class}</td>
-    <td className="hidden md:table-cell">{item.date}</td>
-    <td className="hidden md:table-cell">{item.startTime}</td>
-    <td className="hidden md:table-cell">{item.endTime}</td>
-    <td>
-      <div className="flex items-center gap-2">
-        {role === "admin" && (
-          <>
-            <FormModal table="event" type="update" data={item} />
-            <FormModal table="event" type="delete" id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
-
 const EventListPage = () => {
+  const { user } = useAuth();
   const { data } = useData();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const userRole = user?.role ?? "student";
+  const canEdit = userRole === "admin";
+
+  const columns = [
+    { header: "Title", accessor: "title" },
+    { header: "Class", accessor: "class" },
+    { header: "Date", accessor: "date", className: "hidden md:table-cell" },
+    { header: "Start Time", accessor: "startTime", className: "hidden md:table-cell" },
+    { header: "End Time", accessor: "endTime", className: "hidden md:table-cell" },
+    ...(canEdit ? [{ header: "Actions", accessor: "action" }] : []),
+  ];
+
+  const renderRow = (item: Event) => (
+    <tr key={item.id} className="border-b border-gray-200 dark:border-slate-800 even:bg-slate-50 dark:even:bg-slate-800/40 text-sm hover:bg-RishlightSky dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-slate-200">
+      <td className="flex items-center gap-4 p-4 font-semibold text-gray-800 dark:text-slate-100">{item.title}</td>
+      <td>{item.class}</td>
+      <td className="hidden md:table-cell">{item.date}</td>
+      <td className="hidden md:table-cell">{item.startTime}</td>
+      <td className="hidden md:table-cell">{item.endTime}</td>
+      {canEdit && (
+        <td>
+          <div className="flex items-center gap-2">
+            <FormModal table="event" type="update" data={item} />
+            <FormModal table="event" type="delete" id={item.id} />
+          </div>
+        </td>
+      )}
+    </tr>
+  );
 
   const filteredData = (data.event || []).filter((ev: Event) => {
     const q = searchTerm.toLowerCase().trim();
@@ -73,7 +75,7 @@ const EventListPage = () => {
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
               <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
             </button>
-            {role === "admin" && <FormModal table="event" type="create" />}
+            {canEdit && <FormModal table="event" type="create" />}
           </div>
         </div>
       </div>

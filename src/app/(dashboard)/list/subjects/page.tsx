@@ -5,41 +5,43 @@ import FormModal from "@/app/components/FormModal";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
 import TableSearch from "@/app/components/TableSearch";
-import { role } from "@/lib/data";
+import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 import Image from "next/image";
 
 type Subject = { id: number; name: string; teachers: string[] | string };
 
-const columns = [
-  { header: "Subject Name", accessor: "name" },
-  { header: "Teachers", accessor: "teachers", className: "hidden md:table-cell" },
-  { header: "Actions", accessor: "action" },
-];
-
-const renderRow = (item: Subject) => {
-  const teachersDisplay = Array.isArray(item.teachers) ? item.teachers.join(", ") : item.teachers;
-  return (
-    <tr key={item.id} className="border-b border-gray-200 dark:border-slate-800 even:bg-slate-50 dark:even:bg-slate-800/40 text-sm hover:bg-RishlightSky dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-slate-200">
-      <td className="flex items-center gap-4 p-4 font-semibold text-gray-800 dark:text-slate-100">{item.name}</td>
-      <td className="hidden md:table-cell">{teachersDisplay}</td>
-      <td>
-        <div className="flex items-center gap-2">
-          {role === "admin" && (
-            <>
-              <FormModal table="subject" type="update" data={item} />
-              <FormModal table="subject" type="delete" id={item.id} />
-            </>
-          )}
-        </div>
-      </td>
-    </tr>
-  );
-};
-
 const SubjectListPage = () => {
+  const { user } = useAuth();
   const { data } = useData();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const userRole = user?.role ?? "student";
+  const canEdit = userRole === "admin";
+
+  const columns = [
+    { header: "Subject Name", accessor: "name" },
+    { header: "Teachers", accessor: "teachers", className: "hidden md:table-cell" },
+    ...(canEdit ? [{ header: "Actions", accessor: "action" }] : []),
+  ];
+
+  const renderRow = (item: Subject) => {
+    const teachersDisplay = Array.isArray(item.teachers) ? item.teachers.join(", ") : item.teachers;
+    return (
+      <tr key={item.id} className="border-b border-gray-200 dark:border-slate-800 even:bg-slate-50 dark:even:bg-slate-800/40 text-sm hover:bg-RishlightSky dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-slate-200">
+        <td className="flex items-center gap-4 p-4 font-semibold text-gray-800 dark:text-slate-100">{item.name}</td>
+        <td className="hidden md:table-cell">{teachersDisplay}</td>
+        {canEdit && (
+          <td>
+            <div className="flex items-center gap-2">
+              <FormModal table="subject" type="update" data={item} />
+              <FormModal table="subject" type="delete" id={item.id} />
+            </div>
+          </td>
+        )}
+      </tr>
+    );
+  };
 
   const filteredData = (data.subject || []).filter((s: Subject) => {
     const q = searchTerm.toLowerCase().trim();
@@ -58,7 +60,7 @@ const SubjectListPage = () => {
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
               <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
             </button>
-            {role === "admin" && <FormModal table="subject" type="create" />}
+            {canEdit && <FormModal table="subject" type="create" />}
           </div>
         </div>
       </div>
