@@ -68,6 +68,7 @@ export default function Menu({ role, onLinkClick }: MenuProps) {
   };
 
   const isActive = (item: MenuItem) => {
+    if (!pathname) return false;
     const href = getHref(item);
     if (href === ROLE_HOME[role]) return pathname === href;
     return pathname.startsWith(href);
