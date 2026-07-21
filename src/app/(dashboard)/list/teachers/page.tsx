@@ -64,7 +64,7 @@ const renderRow = (item: Teacher) => {
   return (
     <tr
       key={item.id}
-      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-RishlightSky transition-colors"
+      className="border-b border-gray-200 dark:border-slate-800 even:bg-slate-50 dark:even:bg-slate-800/40 text-sm hover:bg-RishlightSky dark:hover:bg-slate-800 transition-colors text-gray-700 dark:text-slate-200"
     >
       <td className="flex items-center gap-4 p-4">
         <Image
@@ -75,8 +75,8 @@ const renderRow = (item: Teacher) => {
           className="md:hidden xl:block w-10 h-10 rounded-full object-cover"
         />
         <div className="flex flex-col">
-          <h3 className="font-semibold">{item.name}</h3>
-          <p className="text-xs text-gray-500">{item?.email}</p>
+          <h3 className="font-semibold text-gray-800 dark:text-slate-100">{item.name}</h3>
+          <p className="text-xs text-gray-500 dark:text-slate-400">{item?.email}</p>
         </div>
       </td>
       <td className="hidden md:table-cell">{item.teacherId}</td>
@@ -87,8 +87,8 @@ const renderRow = (item: Teacher) => {
       <td>
         <div className="flex items-center gap-2">
           <Link href={`/list/teachers/${item.id}`}>
-            <button className="w-7 h-7 flex items-center justify-center rounded-full bg-Rishsky">
-              <Image src="/view.png" alt="view" width={16} height={16} />
+            <button className="w-7 h-7 flex items-center justify-center rounded-full bg-Rishsky dark:bg-sky-900 text-gray-800 dark:text-sky-100">
+              <Image src="/view.png" alt="view" width={16} height={16} className="dark:invert" />
             </button>
           </Link>
           {role === "admin" && (
@@ -107,17 +107,17 @@ const TeacherListPage = () => {
   const { data } = useData();
 
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+    <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-4 rounded-md flex-1 m-4 mt-0 border border-gray-100 dark:border-slate-800 shadow-sm transition-colors">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="hidden md:block text-lg font-semibold">All Teachers</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow">
-              <Image src="/filter.png" alt="filter" width={14} height={14} />
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
+              <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow">
-              <Image src="/sort.png" alt="sort" width={14} height={14} />
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
+              <Image src="/sort.png" alt="sort" width={14} height={14} className="dark:invert" />
             </button>
             {role === "admin" && <FormModal table="teacher" type="create" />}
           </div>

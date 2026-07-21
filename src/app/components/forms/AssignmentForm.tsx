@@ -23,21 +23,21 @@ const AssignmentForm = ({ type, data, closeModal, onSubmitHandler }: FormProps) 
   };
 
   return (
-    <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-8 text-gray-800 dark:text-slate-100" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-xl font-semibold">{type === "create" ? "Create a new assignment" : "Update the assignment"}</h1>
       <div className="flex justify-between flex-wrap gap-4">
         {["subject", "class", "teacher"].map((field) => (
           <div key={field} className="flex flex-col gap-2 w-full md:w-1/4">
-            <label className="text-xs text-gray-500 capitalize">{field}</label>
-            <input type="text" {...register(field)} className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" />
+            <label className="text-xs text-gray-500 dark:text-slate-400 capitalize">{field}</label>
+            <input type="text" {...register(field)} className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400" />
           </div>
         ))}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Due Date</label>
-          <input type="date" {...register("dueDate")} className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" />
+          <label className="text-xs text-gray-500 dark:text-slate-400">Due Date</label>
+          <input type="date" {...register("dueDate")} className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400" />
         </div>
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 transition-colors" type="submit">
+      <button className="bg-blue-400 dark:bg-sky-600 text-white p-2 rounded-md hover:bg-blue-500 dark:hover:bg-sky-500 transition-colors" type="submit">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>

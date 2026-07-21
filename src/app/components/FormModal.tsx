@@ -156,14 +156,14 @@ const FormModal = ({
         />
       </button>
       {open && (
-        <div className="w-screen h-screen fixed left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%] max-h-[90vh] overflow-y-auto">
+        <div className="w-screen h-screen fixed left-0 top-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-xs">
+          <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-6 rounded-2xl relative w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%] max-h-[90vh] overflow-y-auto border border-gray-100 dark:border-slate-800 shadow-2xl">
             <Form />
             <div
-              className="absolute top-4 right-4 cursor-pointer"
+              className="absolute top-4 right-4 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
               onClick={() => setOpen(false)}
             >
-              <Image src="/close.png" alt="close" width={14} height={14} />
+              <Image src="/close.png" alt="close" width={14} height={14} className="dark:invert" />
             </div>
           </div>
         </div>

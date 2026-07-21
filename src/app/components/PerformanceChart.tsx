@@ -10,11 +10,10 @@ const data = [
 
 const PerformanceChart = () => {
   return (
-    <div className="bg-white rounded-xl p-4 flex flex-col gap-2">
+    <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 rounded-xl p-4 flex flex-col gap-2 shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
       <div className="flex justify-between items-center">
         <h1 className="text-base font-semibold">Performance</h1>
       </div>
-      {/* Give explicit height so ResponsiveContainer resolves correctly */}
       <div className="h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart cx="50%" cy="50%" innerRadius="40%" outerRadius="100%" barSize={28} data={data}>
@@ -23,7 +22,7 @@ const PerformanceChart = () => {
           </RadialBarChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-center text-xs text-gray-400">1st Semester — 2nd Semester</p>
+      <p className="text-center text-xs text-gray-400 dark:text-slate-400">1st Semester — 2nd Semester</p>
     </div>
   );
 };
