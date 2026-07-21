@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
 import TableSearch from "@/app/components/TableSearch";
@@ -34,25 +37,41 @@ const renderRow = (item: any) => (
   </tr>
 );
 
-const AttendanceListPage = () => (
-  <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-4 rounded-md flex-1 m-4 mt-0 border border-gray-100 dark:border-slate-800 shadow-sm transition-colors">
-    <div className="flex items-center justify-between flex-wrap gap-4">
-      <h1 className="hidden md:block text-lg font-semibold">Attendance</h1>
-      <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-        <TableSearch />
-        <div className="flex items-center gap-4 self-end">
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
-            <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
-            <Image src="/sort.png" alt="sort" width={14} height={14} className="dark:invert" />
-          </button>
+const AttendanceListPage = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredData = attendanceData.filter((item) => {
+    const q = searchTerm.toLowerCase().trim();
+    if (!q) return true;
+    const statusStr = item.present ? "present" : "absent";
+    return (
+      item.student.toLowerCase().includes(q) ||
+      item.class.toLowerCase().includes(q) ||
+      item.day.toLowerCase().includes(q) ||
+      statusStr.includes(q)
+    );
+  });
+
+  return (
+    <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-4 rounded-md flex-1 m-4 mt-0 border border-gray-100 dark:border-slate-800 shadow-sm transition-colors">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h1 className="hidden md:block text-lg font-semibold">Attendance</h1>
+        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+          <TableSearch value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search attendance..." />
+          <div className="flex items-center gap-4 self-end">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
+              <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
+            </button>
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
+              <Image src="/sort.png" alt="sort" width={14} height={14} className="dark:invert" />
+            </button>
+          </div>
         </div>
       </div>
+      <Table columns={columns} renderRow={renderRow} data={filteredData} />
+      <Pagination />
     </div>
-    <Table columns={columns} renderRow={renderRow} data={attendanceData} />
-    <Pagination />
-  </div>
-);
+  );
+};
 
 export default AttendanceListPage;

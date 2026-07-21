@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import FormModal from "@/app/components/FormModal";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
@@ -22,39 +23,13 @@ type Teacher = {
 };
 
 const columns = [
-  {
-    header: "Info",
-    accessor: "info",
-  },
-  {
-    header: "Teacher ID",
-    accessor: "teacherId",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Subjects",
-    accessor: "subjects",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Classes",
-    accessor: "classes",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Phone",
-    accessor: "phone",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Address",
-    accessor: "address",
-    className: "hidden xl:table-cell",
-  },
-  {
-    header: "Actions",
-    accessor: "action",
-  },
+  { header: "Info", accessor: "info" },
+  { header: "Teacher ID", accessor: "teacherId", className: "hidden md:table-cell" },
+  { header: "Subjects", accessor: "subjects", className: "hidden md:table-cell" },
+  { header: "Classes", accessor: "classes", className: "hidden lg:table-cell" },
+  { header: "Phone", accessor: "phone", className: "hidden lg:table-cell" },
+  { header: "Address", accessor: "address", className: "hidden xl:table-cell" },
+  { header: "Actions", accessor: "action" },
 ];
 
 const renderRow = (item: Teacher) => {
@@ -105,13 +80,35 @@ const renderRow = (item: Teacher) => {
 
 const TeacherListPage = () => {
   const { data } = useData();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredData = (data.teacher || []).filter((t: Teacher) => {
+    const q = searchTerm.toLowerCase().trim();
+    if (!q) return true;
+    const name = t.name?.toLowerCase() || "";
+    const email = t.email?.toLowerCase() || "";
+    const phone = t.phone?.toLowerCase() || "";
+    const teacherId = t.teacherId?.toLowerCase() || "";
+    const address = t.address?.toLowerCase() || "";
+    const subjects = Array.isArray(t.subjects) ? t.subjects.join(" ").toLowerCase() : (t.subjects?.toLowerCase() || "");
+    const classes = Array.isArray(t.classes) ? t.classes.join(" ").toLowerCase() : (t.classes?.toLowerCase() || "");
+    return (
+      name.includes(q) ||
+      email.includes(q) ||
+      phone.includes(q) ||
+      teacherId.includes(q) ||
+      address.includes(q) ||
+      subjects.includes(q) ||
+      classes.includes(q)
+    );
+  });
 
   return (
     <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-4 rounded-md flex-1 m-4 mt-0 border border-gray-100 dark:border-slate-800 shadow-sm transition-colors">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="hidden md:block text-lg font-semibold">All Teachers</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
+          <TableSearch value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search teachers..." />
           <div className="flex items-center gap-4 self-end">
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
               <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
@@ -123,7 +120,7 @@ const TeacherListPage = () => {
           </div>
         </div>
       </div>
-      <Table columns={columns} renderRow={renderRow} data={data.teacher} />
+      <Table columns={columns} renderRow={renderRow} data={filteredData} />
       <Pagination />
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import FormModal from "@/app/components/FormModal";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
@@ -72,13 +73,28 @@ const renderRow = (item: Student) => (
 
 const StudentListPage = () => {
   const { data } = useData();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredData = (data.student || []).filter((s: Student) => {
+    const q = searchTerm.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      (s.name?.toLowerCase() || "").includes(q) ||
+      (s.email?.toLowerCase() || "").includes(q) ||
+      (s.phone?.toLowerCase() || "").includes(q) ||
+      (s.studentId?.toLowerCase() || "").includes(q) ||
+      (s.class?.toLowerCase() || "").includes(q) ||
+      (s.address?.toLowerCase() || "").includes(q) ||
+      s.grade?.toString().includes(q)
+    );
+  });
 
   return (
     <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-4 rounded-md flex-1 m-4 mt-0 border border-gray-100 dark:border-slate-800 shadow-sm transition-colors">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="hidden md:block text-lg font-semibold">All Students</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
+          <TableSearch value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search students..." />
           <div className="flex items-center gap-4 self-end">
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow dark:bg-yellow-900">
               <Image src="/filter.png" alt="filter" width={14} height={14} className="dark:invert" />
@@ -87,7 +103,7 @@ const StudentListPage = () => {
           </div>
         </div>
       </div>
-      <Table columns={columns} renderRow={renderRow} data={data.student} />
+      <Table columns={columns} renderRow={renderRow} data={filteredData} />
       <Pagination />
     </div>
   );
