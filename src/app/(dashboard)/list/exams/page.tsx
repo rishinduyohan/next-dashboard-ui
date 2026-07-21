@@ -1,8 +1,11 @@
+"use client";
+
 import FormModal from "@/app/components/FormModal";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
 import TableSearch from "@/app/components/TableSearch";
-import { examsData, role } from "@/lib/data";
+import { role } from "@/lib/data";
+import { useData } from "@/context/DataContext";
 import Image from "next/image";
 
 type Exam = { id: number; subject: string; class: string; teacher: string; date: string };
@@ -20,10 +23,10 @@ const renderRow = (item: Exam) => (
     <td className="flex items-center gap-4 p-4 font-semibold">{item.subject}</td>
     <td className="hidden md:table-cell">{item.class}</td>
     <td className="hidden md:table-cell">{item.teacher}</td>
-    <td className="hidden lg:table-cell">{new Intl.DateTimeFormat("en-US").format(new Date(item.date))}</td>
+    <td className="hidden lg:table-cell">{item.date ? new Intl.DateTimeFormat("en-US").format(new Date(item.date)) : "-"}</td>
     <td>
       <div className="flex items-center gap-2">
-        {role === "admin" && (
+        {(role === "admin" || role === "teacher") && (
           <>
             <FormModal table="exam" type="update" data={item} />
             <FormModal table="exam" type="delete" id={item.id} />
@@ -34,23 +37,27 @@ const renderRow = (item: Exam) => (
   </tr>
 );
 
-const ExamListPage = () => (
-  <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-    <div className="flex items-center justify-between flex-wrap gap-4">
-      <h1 className="hidden md:block text-lg font-semibold">All Exams</h1>
-      <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-        <TableSearch />
-        <div className="flex items-center gap-4 self-end">
-          <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow">
-            <Image src="/filter.png" alt="filter" width={14} height={14} />
-          </button>
-          {(role === "admin" || role === "teacher") && <FormModal table="exam" type="create" />}
+const ExamListPage = () => {
+  const { data } = useData();
+
+  return (
+    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <h1 className="hidden md:block text-lg font-semibold">All Exams</h1>
+        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+          <TableSearch />
+          <div className="flex items-center gap-4 self-end">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow">
+              <Image src="/filter.png" alt="filter" width={14} height={14} />
+            </button>
+            {(role === "admin" || role === "teacher") && <FormModal table="exam" type="create" />}
+          </div>
         </div>
       </div>
+      <Table columns={columns} renderRow={renderRow} data={data.exam} />
+      <Pagination />
     </div>
-    <Table columns={columns} renderRow={renderRow} data={examsData} />
-    <Pagination />
-  </div>
-);
+  );
+};
 
 export default ExamListPage;

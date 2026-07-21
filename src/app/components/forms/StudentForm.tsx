@@ -19,21 +19,46 @@ type StudentFormInputs = {
   img: FileList;
 };
 
+type FormProps = {
+  type: "create" | "update";
+  data?: any;
+  closeModal?: () => void;
+  onSubmitHandler?: (formData: any) => void;
+};
+
 const StudentForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+  closeModal,
+  onSubmitHandler,
+}: FormProps) => {
+  const defaultValues = type === "update" && data ? {
+    ...data,
+    username: data.username ?? data.studentId ?? data.name?.toLowerCase().replace(/\s+/g, "") ?? "",
+    email: data.email ?? `${data.name?.toLowerCase().replace(/\s+/g, "") ?? "student"}@schooldev.com`,
+    firstName: data.firstName ?? data.name?.split(" ")[0] ?? "",
+    lastName: data.lastName ?? data.name?.split(" ").slice(1).join(" ") ?? "",
+    phone: data.phone ?? "",
+    address: data.address ?? "",
+    bloodType: data.bloodType ?? "A+",
+    birthday: data.birthday ?? "2010-01-01",
+    sex: data.sex ?? "male",
+    grade: data.grade ?? 5,
+    class: data.class ?? "5A",
+  } : undefined;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StudentFormInputs>();
+  } = useForm<StudentFormInputs>({ defaultValues });
 
   const onSubmit = (formData: StudentFormInputs) => {
-    console.log(formData);
+    if (onSubmitHandler) {
+      onSubmitHandler(formData);
+    } else if (closeModal) {
+      closeModal();
+    }
   };
 
   return (
@@ -119,7 +144,7 @@ const StudentForm = ({
           />
         </div>
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
+      <button className="bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 transition-colors" type="submit">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>

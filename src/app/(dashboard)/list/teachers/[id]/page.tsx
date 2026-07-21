@@ -1,5 +1,6 @@
 import Announcements from "@/app/components/Announcements";
 import BigCalendar from "@/app/components/BigCalendar";
+import FormModal from "@/app/components/FormModal";
 import PerformanceChart from "@/app/components/PerformanceChart";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,12 +26,19 @@ const SingleTeacherPage = ({ params }: { params: { id: string } }) => {
             <div className="w-2/3 flex flex-col justify-between gap-4">
               <div className="flex items-center gap-4">
                 <h1 className="text-xl font-semibold">Cameron Moran</h1>
-                <Image
-                  src="/edit.png"
-                  alt="edit"
-                  width={20}
-                  height={20}
-                  className="cursor-pointer"
+                <FormModal
+                  table="teacher"
+                  type="update"
+                  data={{
+                    id: 1,
+                    teacherId: "1234567890",
+                    name: "Cameron Moran",
+                    email: "user@gmail.com",
+                    phone: "+1 234 567",
+                    address: "123 Main St, Springfield",
+                    subjects: ["Math", "Geometry"],
+                    classes: ["4A", "4B"],
+                  }}
                 />
               </div>
               <p className="text-sm text-gray-500">

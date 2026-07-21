@@ -1,5 +1,6 @@
 import Announcements from "@/app/components/Announcements";
 import BigCalendar from "@/app/components/BigCalendar";
+import FormModal from "@/app/components/FormModal";
 import PerformanceChart from "@/app/components/PerformanceChart";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +24,22 @@ const SingleStudentPage = ({ params }: { params: { id: string } }) => {
               />
             </div>
             <div className="w-2/3 flex flex-col justify-between gap-4">
-              <h1 className="text-xl font-semibold">Cameron Moran</h1>
+              <div className="flex items-center gap-4">
+                <h1 className="text-xl font-semibold">Cameron Moran</h1>
+                <FormModal
+                  table="student"
+                  type="update"
+                  data={{
+                    id: 1,
+                    studentId: "1234567890",
+                    name: "Cameron Moran",
+                    email: "student@school.com",
+                    phone: "+1 234 567",
+                    grade: 4,
+                    class: "4B",
+                  }}
+                />
+              </div>
               <p className="text-sm text-gray-500">
                 Student in class 4B, Grade 4.
               </p>

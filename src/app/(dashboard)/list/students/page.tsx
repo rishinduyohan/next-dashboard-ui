@@ -1,8 +1,11 @@
+"use client";
+
 import FormModal from "@/app/components/FormModal";
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
 import TableSearch from "@/app/components/TableSearch";
-import { role, studentsData } from "@/lib/data";
+import { role } from "@/lib/data";
+import { useData } from "@/context/DataContext";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,7 +14,7 @@ type Student = {
   studentId: string;
   name: string;
   email?: string;
-  photo: string;
+  photo?: string;
   phone: string;
   grade: number;
   class: string;
@@ -34,7 +37,7 @@ const renderRow = (item: Student) => (
   >
     <td className="flex items-center gap-4 p-4">
       <Image
-        src={item.photo}
+        src={item.photo || "/avatar.png"}
         alt={item.name}
         width={40}
         height={40}
@@ -57,7 +60,10 @@ const renderRow = (item: Student) => (
           </button>
         </Link>
         {role === "admin" && (
-          <FormModal table="student" type="delete" id={item.id} />
+          <>
+            <FormModal table="student" type="update" data={item} />
+            <FormModal table="student" type="delete" id={item.id} />
+          </>
         )}
       </div>
     </td>
@@ -65,6 +71,8 @@ const renderRow = (item: Student) => (
 );
 
 const StudentListPage = () => {
+  const { data } = useData();
+
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       <div className="flex items-center justify-between flex-wrap gap-4">
@@ -75,14 +83,11 @@ const StudentListPage = () => {
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow">
               <Image src="/filter.png" alt="filter" width={14} height={14} />
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-Rishyellow">
-              <Image src="/sort.png" alt="sort" width={14} height={14} />
-            </button>
             {role === "admin" && <FormModal table="student" type="create" />}
           </div>
         </div>
       </div>
-      <Table columns={columns} renderRow={renderRow} data={studentsData} />
+      <Table columns={columns} renderRow={renderRow} data={data.student} />
       <Pagination />
     </div>
   );

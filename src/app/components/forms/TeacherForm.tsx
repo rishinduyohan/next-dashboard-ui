@@ -40,21 +40,45 @@ const InputField = ({ label, register, name, type = "text", error }: InputFieldP
   </div>
 );
 
+type FormProps = {
+  type: "create" | "update";
+  data?: any;
+  closeModal?: () => void;
+  onSubmitHandler?: (formData: any) => void;
+};
+
 const TeacherForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+  closeModal,
+  onSubmitHandler,
+}: FormProps) => {
+  const defaultValues = type === "update" && data ? {
+    ...data,
+    username: data.username ?? data.teacherId ?? data.name?.toLowerCase().replace(/\s+/g, "") ?? "",
+    email: data.email ?? `${data.name?.toLowerCase().replace(/\s+/g, "") ?? "teacher"}@schooldev.com`,
+    firstName: data.firstName ?? data.name?.split(" ")[0] ?? "",
+    lastName: data.lastName ?? data.name?.split(" ").slice(1).join(" ") ?? "",
+    phone: data.phone ?? "",
+    address: data.address ?? "",
+    bloodType: data.bloodType ?? "A+",
+    birthday: data.birthday ?? "1985-01-01",
+    sex: data.sex ?? "male",
+    subjects: Array.isArray(data.subjects) ? data.subjects.join(", ") : data.subjects ?? "",
+  } : undefined;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TeacherFormInputs>();
+  } = useForm<TeacherFormInputs>({ defaultValues });
 
   const onSubmit = (formData: TeacherFormInputs) => {
-    console.log(formData);
+    if (onSubmitHandler) {
+      onSubmitHandler(formData);
+    } else if (closeModal) {
+      closeModal();
+    }
   };
 
   return (
@@ -109,7 +133,7 @@ const TeacherForm = ({
           />
         </div>
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
+      <button className="bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 transition-colors" type="submit">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>

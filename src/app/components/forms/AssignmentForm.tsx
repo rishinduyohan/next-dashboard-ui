@@ -1,8 +1,27 @@
+"use client";
+
 import { useForm } from "react-hook-form";
 
-const AssignmentForm = ({ type, data }: { type: "create" | "update"; data?: any }) => {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (formData: any) => console.log(formData);
+type FormProps = {
+  type: "create" | "update";
+  data?: any;
+  closeModal?: () => void;
+  onSubmitHandler?: (formData: any) => void;
+};
+
+const AssignmentForm = ({ type, data, closeModal, onSubmitHandler }: FormProps) => {
+  const { register, handleSubmit } = useForm({
+    defaultValues: type === "update" ? data : undefined,
+  });
+
+  const onSubmit = (formData: any) => {
+    if (onSubmitHandler) {
+      onSubmitHandler(formData);
+    } else if (closeModal) {
+      closeModal();
+    }
+  };
+
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-xl font-semibold">{type === "create" ? "Create a new assignment" : "Update the assignment"}</h1>
@@ -18,8 +37,11 @@ const AssignmentForm = ({ type, data }: { type: "create" | "update"; data?: any 
           <input type="date" {...register("dueDate")} className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" />
         </div>
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">{type === "create" ? "Create" : "Update"}</button>
+      <button className="bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 transition-colors" type="submit">
+        {type === "create" ? "Create" : "Update"}
+      </button>
     </form>
   );
 };
+
 export default AssignmentForm;

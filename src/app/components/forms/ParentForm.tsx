@@ -2,9 +2,31 @@
 
 import { useForm } from "react-hook-form";
 
-const ParentForm = ({ type, data }: { type: "create" | "update"; data?: any }) => {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (formData: any) => console.log(formData);
+type FormProps = {
+  type: "create" | "update";
+  data?: any;
+  closeModal?: () => void;
+  onSubmitHandler?: (formData: any) => void;
+};
+
+const ParentForm = ({ type, data, closeModal, onSubmitHandler }: FormProps) => {
+  const defaultValues = type === "update" && data ? {
+    ...data,
+    username: data.username ?? data.name?.toLowerCase().replace(/\s+/g, "") ?? "",
+    firstName: data.firstName ?? data.name?.split(" ")[0] ?? "",
+    lastName: data.lastName ?? data.name?.split(" ").slice(1).join(" ") ?? "",
+    students: Array.isArray(data.students) ? data.students.join(", ") : data.students ?? "",
+  } : undefined;
+
+  const { register, handleSubmit } = useForm({ defaultValues });
+
+  const onSubmit = (formData: any) => {
+    if (onSubmitHandler) {
+      onSubmitHandler(formData);
+    } else if (closeModal) {
+      closeModal();
+    }
+  };
 
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
@@ -23,10 +45,11 @@ const ParentForm = ({ type, data }: { type: "create" | "update"; data?: any }) =
           <input type="text" {...register("students")} placeholder="comma separated names" className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full" />
         </div>
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
+      <button className="bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 transition-colors" type="submit">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );
 };
+
 export default ParentForm;
