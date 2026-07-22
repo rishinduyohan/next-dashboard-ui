@@ -19,95 +19,120 @@ type StudentFormInputs = {
   img: FileList;
 };
 
+type FormProps = {
+  type: "create" | "update";
+  data?: any;
+  closeModal?: () => void;
+  onSubmitHandler?: (formData: any) => void;
+};
+
 const StudentForm = ({
   type,
   data,
-}: {
-  type: "create" | "update";
-  data?: any;
-}) => {
+  closeModal,
+  onSubmitHandler,
+}: FormProps) => {
+  const defaultValues = type === "update" && data ? {
+    ...data,
+    username: data.username ?? data.studentId ?? data.name?.toLowerCase().replace(/\s+/g, "") ?? "",
+    email: data.email ?? `${data.name?.toLowerCase().replace(/\s+/g, "") ?? "student"}@schooldev.com`,
+    firstName: data.firstName ?? data.name?.split(" ")[0] ?? "",
+    lastName: data.lastName ?? data.name?.split(" ").slice(1).join(" ") ?? "",
+    phone: data.phone ?? "",
+    address: data.address ?? "",
+    bloodType: data.bloodType ?? "A+",
+    birthday: data.birthday ?? "2010-01-01",
+    sex: data.sex ?? "male",
+    grade: data.grade ?? 5,
+    class: data.class ?? "5A",
+  } : undefined;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StudentFormInputs>();
+  } = useForm<StudentFormInputs>({ defaultValues });
 
   const onSubmit = (formData: StudentFormInputs) => {
-    console.log(formData);
+    if (onSubmitHandler) {
+      onSubmitHandler(formData);
+    } else if (closeModal) {
+      closeModal();
+    }
   };
 
   return (
-    <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-8 text-gray-800 dark:text-slate-100" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create a new student" : "Update the student"}
       </h1>
-      <span className="text-xs text-gray-400 font-semibold">Authentication Information</span>
+      <span className="text-xs text-gray-400 dark:text-slate-400 font-semibold">Authentication Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         {(["username", "email", "password"] as const).map((field) => (
           <div key={field} className="flex flex-col gap-2 w-full md:w-1/4">
-            <label className="text-xs text-gray-500 capitalize">{field}</label>
+            <label className="text-xs text-gray-500 dark:text-slate-400 capitalize">{field}</label>
             <input
               type={field === "password" ? "password" : field === "email" ? "email" : "text"}
               {...register(field)}
-              className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+              className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400"
             />
           </div>
         ))}
       </div>
-      <span className="text-xs text-gray-400 font-semibold">Personal Information</span>
+      <span className="text-xs text-gray-400 dark:text-slate-400 font-semibold">Personal Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         {(["firstName", "lastName", "phone", "address", "bloodType"] as const).map((field) => (
           <div key={field} className="flex flex-col gap-2 w-full md:w-1/4">
-            <label className="text-xs text-gray-500 capitalize">
+            <label className="text-xs text-gray-500 dark:text-slate-400 capitalize">
               {field.replace(/([A-Z])/g, " $1")}
             </label>
             <input
               type="text"
               {...register(field)}
-              className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+              className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400"
             />
           </div>
         ))}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Birthday</label>
+          <label className="text-xs text-gray-500 dark:text-slate-400">Birthday</label>
           <input
             type="date"
             {...register("birthday")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400"
           />
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Sex</label>
+          <label className="text-xs text-gray-500 dark:text-slate-400">Sex</label>
           <select
             {...register("sex")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400"
           >
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Grade</label>
+          <label className="text-xs text-gray-500 dark:text-slate-400">Grade</label>
           <input
             type="number"
             {...register("grade")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400"
           />
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Class</label>
+          <label className="text-xs text-gray-500 dark:text-slate-400">Class</label>
           <input
             type="text"
             {...register("class")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            className="ring-[1.5px] ring-gray-300 dark:ring-slate-700 bg-transparent dark:bg-slate-800 p-2 rounded-md text-sm w-full outline-none focus:ring-blue-400"
           />
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
           <label
-            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+            className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-2 cursor-pointer"
             htmlFor="student-img"
           >
-            <Image src="/upload.png" alt="upload" width={28} height={28} />
+            <Image src="/upload.png" alt="upload" width={28} height={28} className="dark:invert" />
             <span>Upload a photo</span>
           </label>
           <input
@@ -119,7 +144,7 @@ const StudentForm = ({
           />
         </div>
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md" type="submit">
+      <button className="bg-blue-400 dark:bg-sky-600 text-white p-2 rounded-md hover:bg-blue-500 dark:hover:bg-sky-500 transition-colors" type="submit">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>

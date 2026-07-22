@@ -13,7 +13,7 @@
   }
 
   body {
-    @apply text-gray-800;
+    @apply text-gray-800 dark:text-slate-100 dark:bg-slate-950;
     overflow-x: hidden;
   }
 
@@ -38,6 +38,13 @@
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background-color: #e5e7eb;
     border-radius: 4px;
+  }
+
+  html.dark .scrollbar-thin {
+    scrollbar-color: #334155 transparent;
+  }
+  html.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #334155;
   }
 
   /* Prevent text overflow in tables */

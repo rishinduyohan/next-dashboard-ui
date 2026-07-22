@@ -20,18 +20,18 @@ const data = [
 
 const FinanceChart = () => {
   return (
-    <div className="bg-white rounded-xl w-full h-full p-4 flex flex-col">
+    <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 rounded-xl w-full h-full p-4 flex flex-col shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
       <div className="flex justify-between items-center shrink-0">
         <h1 className="text-lg font-semibold">Finance Overview</h1>
-        <Image src="/moreDark.png" alt="more" width={20} height={20} />
+        <Image src="/moreDark.png" alt="more" width={20} height={20} className="dark:invert" />
       </div>
       <div className="flex-1 min-h-[200px] mt-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="name" axisLine={false} tick={{ fill: "#d1d5db", fontSize: 12 }} tickLine={false} tickMargin={8} />
-            <YAxis axisLine={false} tick={{ fill: "#d1d5db", fontSize: 12 }} tickLine={false} tickMargin={10} />
-            <Tooltip contentStyle={{ borderRadius: "10px", borderColor: "lightgray", fontSize: "12px" }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis dataKey="name" axisLine={false} tick={{ fill: "#94a3b8", fontSize: 12 }} tickLine={false} tickMargin={8} />
+            <YAxis axisLine={false} tick={{ fill: "#94a3b8", fontSize: 12 }} tickLine={false} tickMargin={10} />
+            <Tooltip contentStyle={{ borderRadius: "10px", borderColor: "#334155", backgroundColor: "#0f172a", color: "#f8fafc", fontSize: "12px" }} />
             <Legend align="center" verticalAlign="top" wrapperStyle={{ paddingBottom: "20px" }} />
             <Line type="monotone" dataKey="income" stroke="#C3EBFA" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />
             <Line type="monotone" dataKey="expense" stroke="#CFCEFF" strokeWidth={3} dot={false} activeDot={{ r: 6 }} />

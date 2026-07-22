@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
-// Simple calendar widget without external library
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const EventCalendar = () => {
@@ -34,7 +32,6 @@ const EventCalendar = () => {
   for (let i = 0; i < firstDay; i++) calendarDays.push(null);
   for (let i = 1; i <= daysInMonth; i++) calendarDays.push(i);
 
-  // Upcoming events (static)
   const events = [
     { id: 1, title: "Maths Test", time: "25 Jan, 10:00 AM", description: "Class 4A" },
     { id: 2, title: "Science Lab", time: "26 Jan, 9:00 AM", description: "Class 3B" },
@@ -42,22 +39,22 @@ const EventCalendar = () => {
   ];
 
   return (
-    <div className="bg-white p-4 rounded-md">
+    <div className="bg-white dark:bg-slate-900 text-gray-800 dark:text-slate-100 p-4 rounded-md shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
       {/* Calendar Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-semibold text-gray-800">
+        <h2 className="text-base font-semibold text-gray-800 dark:text-slate-100">
           {monthName} {year}
         </h2>
         <div className="flex items-center gap-2">
           <button
             onClick={prevMonth}
-            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-sm"
+            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-slate-400 text-sm"
           >
             ‹
           </button>
           <button
             onClick={nextMonth}
-            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-sm"
+            className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-500 dark:text-slate-400 text-sm"
           >
             ›
           </button>
@@ -66,7 +63,7 @@ const EventCalendar = () => {
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-2">
         {WEEKDAYS.map((d) => (
-          <div key={d} className="text-center text-xs text-gray-400 font-semibold py-1">
+          <div key={d} className="text-center text-xs text-gray-400 dark:text-slate-400 font-semibold py-1">
             {d}
           </div>
         ))}
@@ -79,8 +76,8 @@ const EventCalendar = () => {
               <button
                 className={`w-7 h-7 flex items-center justify-center rounded-full text-sm transition-colors
                   ${isToday(day)
-                    ? "bg-Rishsky text-gray-800 font-semibold"
-                    : "hover:bg-gray-100 text-gray-700"
+                    ? "bg-Rishsky dark:bg-sky-700 text-gray-800 dark:text-white font-semibold"
+                    : "hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-200"
                   }`}
               >
                 {day}
@@ -91,17 +88,17 @@ const EventCalendar = () => {
       </div>
       {/* Events */}
       <div className="flex flex-col gap-3 mt-5">
-        <h3 className="text-sm font-semibold text-gray-700">Upcoming Events</h3>
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-200">Upcoming Events</h3>
         {events.map((e) => (
           <div
             key={e.id}
-            className="p-4 rounded-md border-2 border-gray-100 border-t-4 odd:border-t-Rishsky even:border-t-Rishpurple"
+            className="p-4 rounded-md border-2 border-gray-100 dark:border-slate-800 border-t-4 odd:border-t-Rishsky even:border-t-Rishpurple dark:odd:border-t-sky-500 dark:even:border-t-purple-500 bg-gray-50/50 dark:bg-slate-800/40"
           >
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-gray-600 text-sm">{e.title}</h2>
-              <span className="text-gray-400 text-xs">{e.time}</span>
+              <h2 className="font-semibold text-gray-600 dark:text-slate-200 text-sm">{e.title}</h2>
+              <span className="text-gray-400 dark:text-slate-400 text-xs">{e.time}</span>
             </div>
-            <p className="mt-2 text-gray-400 text-xs">{e.description}</p>
+            <p className="mt-2 text-gray-400 dark:text-slate-400 text-xs">{e.description}</p>
           </div>
         ))}
       </div>

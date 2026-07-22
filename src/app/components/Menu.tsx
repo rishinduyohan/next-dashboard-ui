@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { UserRole } from "@/context/AuthContext";
+import { useSettings } from "@/context/SettingsContext";
 
 type MenuItem = {
   icon: string;
@@ -61,6 +62,7 @@ interface MenuProps {
 
 export default function Menu({ role, onLinkClick }: MenuProps) {
   const pathname = usePathname();
+  const { t } = useSettings();
 
   const getHref = (item: MenuItem) => {
     if (item.href === "/") return ROLE_HOME[role];
@@ -83,8 +85,8 @@ export default function Menu({ role, onLinkClick }: MenuProps) {
         if (visibleItems.length === 0) return null;
         return (
           <div key={section.title} className="flex flex-col gap-0.5 mb-2">
-            <span className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase px-3 py-2">
-              {section.title}
+            <span className="text-[10px] text-gray-400 dark:text-slate-400 font-semibold tracking-wider uppercase px-3 py-2">
+              {t(section.title)}
             </span>
             {visibleItems.map((item) => {
               const href = getHref(item);
@@ -96,8 +98,8 @@ export default function Menu({ role, onLinkClick }: MenuProps) {
                   onClick={onLinkClick}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 group ${
                     active
-                      ? "bg-[#C3EBFA] text-gray-800"
-                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      ? "bg-[#C3EBFA] text-gray-800 dark:bg-sky-900 dark:text-sky-100"
+                      : "text-gray-500 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-700 dark:hover:text-white"
                   }`}
                 >
                   <Image
@@ -105,11 +107,11 @@ export default function Menu({ role, onLinkClick }: MenuProps) {
                     alt={item.label}
                     width={18}
                     height={18}
-                    className={`shrink-0 ${active ? "opacity-100" : "opacity-60 group-hover:opacity-80"}`}
+                    className={`shrink-0 ${active ? "opacity-100" : "opacity-60 group-hover:opacity-80 dark:invert"}`}
                   />
-                  <span className="font-semibold text-sm">{item.label}</span>
+                  <span className="font-semibold text-sm">{t(item.label)}</span>
                   {active && (
-                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400 dark:bg-sky-400" />
                   )}
                 </Link>
               );
